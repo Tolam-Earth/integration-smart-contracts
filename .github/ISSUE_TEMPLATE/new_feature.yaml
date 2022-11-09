@@ -1,0 +1,13 @@
+name: Feature request
+description: Create a new feature request
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check if there is an existing feature request that matches yours before you submit.  If so, please give it a 👍 reaction and add any additional details.  Otherwise, please submit your feature request for consideration.
+  - type: textarea
+    attributes:
+      label: Feature description
+      placeholder: Tell us what feature you would like to have and what benefit it will provide
+    validations:
+      required: true

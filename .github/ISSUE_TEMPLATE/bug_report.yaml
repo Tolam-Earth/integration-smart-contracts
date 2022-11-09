@@ -1,0 +1,57 @@
+name: Bug Report
+description: File a bug report
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting an issue.  Please review the task list below before submitting the issue. Your issue report will be closed if the issue is incomplete and the below tasks not completed.
+
+        NOTE: If you are unsure about something and the issue is more of a question a better place to post is on Github Discussions :arrow_up:
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+      placeholder: Tell us what should happen
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual Behavior
+      description: A concise description of what you're experiencing.
+      placeholder: Tell us what happens instead
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. In this environment...
+        2. With this config...
+        3. Run '...'
+        4. See error...
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Environment Information
+      description: Environment information where the problem occurs.
+    validations:
+      required: false
+  - type: textarea
+    id: example
+    attributes:
+      label: Failing Test Cases
+      description: Any tests which show the issue
+      placeholder: |
+        Link to GitHub repository with an example that reproduces the issue
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Release or Commit 
+    validations:
+      required: true
+
