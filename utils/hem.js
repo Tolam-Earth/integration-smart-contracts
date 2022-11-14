@@ -1,5 +1,5 @@
 /*!
- * Copyright 2022 ESG Marketplace Inc, DBA Tolam Earth
+ * Copyright 2022 Tolam Earth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,9 @@ const {
   PrivateKey,
   ContractId,
 } = require("@hashgraph/sdk");
+
+const hemContractJSON = require("../build/Hem.json");
+const nftValidatorContractJSON = require("../build/NFTValidator.json");
 
 const getHbarPrice = async function () {
   let response = null;
@@ -134,6 +137,7 @@ async function deployContract(
     .setFileId(bytecodeFileId)
     .setContents(contractByteCode)
     .setMaxChunks(25)
+    .setTransactionValidDuration(180)   // 3 minutes
     .execute(client);
   await fileAppendTx.getReceipt(client);
   // console.log(`- Content added`);
@@ -150,6 +154,45 @@ async function deployContract(
 
   const contractCreateRx = await result.getReceipt(client);
   return contractCreateRx.contractId;
+}
+
+async function deploy(network, operatorId, operatorKey) {
+  const defaultTinybarPerCents = 17523291;
+  let client;
+
+  if (network === "localhost") {
+    client = Client.forNetwork({
+      "127.0.0.1:50211": new AccountId(3),
+    }).setMirrorNetwork("127.0.0.1:5600");
+  } else {
+    client = Client.forNetwork(network);
+  }
+
+  client.setOperator(AccountId.fromString(operatorId), PrivateKey.fromString(operatorKey));
+
+  const nftValidatorContractId = await deployContract(
+    client,
+    nftValidatorContractJSON.bytecode,
+    100000,
+    null
+  );
+
+  const constructParams = new ContractFunctionParameters()
+    .addAddress(nftValidatorContractId.toSolidityAddress())
+    .addUint256(defaultTinybarPerCents)
+    .addBool(false);
+
+  const hemContractId = await deployContract(
+    client,
+    hemContractJSON.bytecode,
+    3000000,
+    constructParams
+  );
+
+  return {
+    nftValidatorId: nftValidatorContractId.toString(),
+    hemId: hemContractId.toString(),
+  };
 }
 
 /**
@@ -542,6 +585,7 @@ class HemAdmin extends Hem {
 }
 
 module.exports = {
+  deploy,
   getHbarPrice,
   getTinybarPerCent,
   deployContract,

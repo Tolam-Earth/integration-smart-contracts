@@ -1,5 +1,5 @@
 /*!
- * Copyright 2022 ESG Marketplace Inc, DBA Tolam Earth
+ * Copyright 2022 Tolam Earth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { deploy } from "./deploy-hem";
+require("dotenv").config();
+const { deploy } = require("../utils/hem");
 
 async function main() {
   let network = process.argv[2];
+
+  const operatorId = process.env.ADMIN_ACCOUNT_ID;
+  const operatorKey = process.env.ADMIN_PRIVATE_KEY;
 
   if (network !== "mainnet") {
     network = "testnet";
   }
 
-  const { nftValidatorId, hemId } = await deploy(network);
+  const { nftValidatorId, hemId } = await deploy(
+    network,
+    operatorId,
+    operatorKey
+  );
 
   console.log("nftValidator:", nftValidatorId.toString());
   console.log("hem         :", hemId.toString());

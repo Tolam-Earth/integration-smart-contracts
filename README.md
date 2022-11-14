@@ -213,9 +213,17 @@ npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
 
 For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
 
+## Scanning
+
+[Slither](https://github.com/crytic/slither) is used to scan this repository for Solidity security misconfigurations and code quality via GitHub Actions. You may run these scans locally:
+
+```
+slither contracts --solc-remaps @openzeppelin=node_modules/@openzeppelin
+```
+
 ## License
 
-Copyright 2022 ESG Marketplace Inc, DBA Tolam Earth
+Copyright 2022 Tolam Earth
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

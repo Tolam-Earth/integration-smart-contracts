@@ -1,5 +1,5 @@
 /*!
- * Copyright 2022 ESG Marketplace Inc, DBA Tolam Earth
+ * Copyright 2022 Tolam Earth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ import { expect } from "chai";
 
 const {
   AccountId,
+  ContractId,
   Client,
   PrivateKey,
   ContractFunctionParameters,
@@ -24,7 +25,7 @@ const {
 } = require("@hashgraph/sdk");
 
 const {
-  deployContract,
+  deploy,
   getTinybarPerCent,
   Hem,
   HemAdmin,
@@ -65,24 +66,14 @@ describe("Hem Integration", function () {
     // Contract Deployment
     const defaultTinybarPerCents = 17523291;
 
-    nftValidatorContractId = await deployContract(
-      client,
-      nftValidatorContractJSON.bytecode,
-      100000,
-      null
+    const { nftValidatorId, hemId } = await deploy(
+      "localhost",
+      operatorId.toString(),
+      operatorKey.toString()
     );
 
-    const constructParams = new ContractFunctionParameters()
-      .addAddress(nftValidatorContractId.toSolidityAddress())
-      .addUint256(defaultTinybarPerCents)
-      .addBool(false);
-
-    hemContractId = await deployContract(
-      client,
-      hemContractJSON.bytecode,
-      3000000,
-      constructParams
-    );
+    nftValidatorContractId = ContractId.fromString(nftValidatorId);
+    hemContractId = ContractId.fromString(hemId);
 
     // Hem Account Setup
     admin = new HemAdmin(
