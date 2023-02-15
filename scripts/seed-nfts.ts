@@ -61,16 +61,16 @@ const seedNFTs = async function () {
   );
 
   // Hedera NFTs
-  const nftId = await nftAdmin.createNFT();
+  const nftId = await nftAdmin.createNFTNoKyc();
   await nftAdmin.mintMultipleNFTs(nftId, nftAmount);
 
   await seller.associateNFT(nftId);
   await buyer.associateNFT(nftId);
-  await nftAdmin.associateOffsets([nftId]);
+  // await nftAdmin.associateOffsets([nftId]);
 
-  await nftAdmin.grantKyc(seller.accountId, nftId);
-  await nftAdmin.grantKyc(buyer.accountId, nftId);
-  await nftAdmin.grantContractKyc(nftId);
+  // await nftAdmin.grantKyc(seller.accountId, nftId);
+  // await nftAdmin.grantKyc(buyer.accountId, nftId);
+  // await nftAdmin.grantContractKyc(nftId);
 
   // Give NFTs to seller
   const serialNumbers = Array.from({ length: nftAmount }, (_, i) => i + 1);

@@ -306,20 +306,39 @@ class Hem {
   };
 
   transferNFTs = async function (to, tokenId, serials) {
-    // console.log(`** Transfering ${tokenId}: ${serialNumbers} from ${from} to ${to} **`);
-    const transaction = await new TransferTransaction();
+    // console.log(`** Transfering ${tokenId}: ${serials} to ${to} **`);
+    const batches = [];
 
-    serials.forEach((s) => {
-      transaction.addNftTransfer(tokenId, s.toString(), this.accountId, to);
-    });
+    let batch = [];
 
-    transaction.freezeWith(this.client);
-    const signTx = await transaction.sign(this.privateKey);
-    const txResponse = await signTx.execute(this.client);
-    const receipt = await txResponse.getReceipt(this.client);
-    const transactionStatus = receipt.status;
+    for (let i = 1 ; i <= serials.length; i++) {
+      batch.push(serials[i - 1]);
 
-    return transactionStatus.toString();
+      if ( !(i % 10) ) {
+        batches.push(batch);
+        batch = [];
+      }
+    }
+
+    // last batch
+    if (batch.length > 0) {
+      batches.push(batch);
+    }
+
+    for (let b of batches) {
+      const transaction = await new TransferTransaction();
+
+      b.forEach((s) => {
+        transaction.addNftTransfer(tokenId, s.toString(), this.accountId, to);
+      });
+  
+      transaction.freezeWith(this.client);
+      const signTx = await transaction.sign(this.privateKey);
+      const txResponse = await signTx.execute(this.client);
+      const receipt = await txResponse.getReceipt(this.client);
+      const transactionStatus = receipt.status;
+      console.log(transactionStatus.toString());
+    }
   };
 
   associateNFT = async function (tokenId) {
@@ -492,17 +511,41 @@ class HemNFTAdmin extends Hem {
 
   mintMultipleNFTs = async function (tokenId, amount) {
     // console.log(`\n** Minting ${amount} NFTs **`);
-    const CID = "QmTy8fATSsEJazSekXTyZHuqEFu2H9sqYQGmaBvMW8jTxN";
-    const metadata = [];
-    for (let i = 1; i <= amount; i++) {
-      metadata.push(Buffer.from(CID));
+
+    const batches = [];
+
+    let batch = [];
+
+    for (let i = 1 ; i <= amount; i++) {
+      batch.push(i - 1);
+
+      if ( !(i % 10) ) {
+        batches.push(batch);
+        batch = [];
+      }
     }
 
-    const tokenMintTx = await new TokenMintTransaction()
+    // last batch
+    if (batch.length > 0) {
+      batches.push(batch);
+    }
+
+    const CID = "QmTy8fATSsEJazSekXTyZHuqEFu2H9sqYQGmaBvMW8jTxN";
+
+    for (let b of batches) {
+      let metadata = [];
+      const transaction = await new TransferTransaction();
+
+      b.forEach((s) => {
+          metadata.push(Buffer.from(CID));
+      });
+  
+      const tokenMintTx = await new TokenMintTransaction()
       .setTokenId(tokenId)
       .setMetadata(metadata)
       .execute(this.client);
-    await tokenMintTx.getReceipt(this.client);
+      await tokenMintTx.getReceipt(this.client);
+    }
   };
 }
 

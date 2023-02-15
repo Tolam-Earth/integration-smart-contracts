@@ -23,7 +23,8 @@ const transferToken = async function () {
   const toAccountId = process.argv[5];
   const toPrivateKey = process.argv[6];
   const tokenId = process.argv[7];
-  const serialNumber = process.argv[8];
+  const serialNumberLowerBound = Number(process.argv[8]);
+  const serialNumberUpperBound = Number(process.argv[9]);
 
   const sender = new Hem(network, "0.0.000000", fromAccountId, fromPrivateKey);
 
@@ -33,13 +34,13 @@ const transferToken = async function () {
   await receiver.associateNFT(tokenId);
 
   // Transfer NFTs
-  const status = await sender.transferNFTs(toAccountId, tokenId, [
-    serialNumber,
-  ]);
+  const serialNumbers = [];
 
-  console.log("Status:", status);
+  for (let i = serialNumberLowerBound; i <= serialNumberUpperBound; i++) {
+    serialNumbers.push(i);
+  }
 
-  return status;
+  await sender.transferNFTs(toAccountId, tokenId, serialNumbers);
 };
 
 transferToken();
