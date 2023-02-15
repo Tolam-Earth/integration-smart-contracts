@@ -18,6 +18,7 @@
     "set-tinybar-per-cent": "node ./scripts/set-tinybar-per-cent.ts",
     "seed:nfts": "node ./scripts/seed-nfts.ts",
     "associate-token": "node ./scripts/associate-token.ts",
+    "transfer-token": "node ./scripts/transfer-token.ts",
     "associate-token-to-contract": "node ./scripts/associate-token-to-contract.ts",
     "apply-kyc": "node ./scripts/apply-kyc.ts",
     "apply-contract-kyc": "node ./scripts/apply-contract-kyc.ts",

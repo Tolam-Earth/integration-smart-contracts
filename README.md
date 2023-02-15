@@ -101,6 +101,9 @@ npm run seed:nfts -- <network> <smart-contract-id> <amount-of-tokens-to-mint>
 # Associate NFT to accounts
 npm run associate-token <network> <account-id> <private-key> <token-id>
 
+# Transfer token
+npm run transfer-token -- <network> <from-account-id> <from-account-private-key> <to-account-id> <token-id> <serial-number>
+
 # Apply KYC to an account
 npm run apply-kyc -- <network> <nft-admin-account-id> <nft-admin-private-key> <token-id> <account-id>
 
